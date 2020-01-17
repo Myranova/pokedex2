@@ -1,0 +1,21 @@
+const mapTypeToColor  = new Map();
+mapTypeToColor.set('poison', 'violet');
+mapTypeToColor.set('water', 'lightblue');
+mapTypeToColor.set('fire', 'red');
+mapTypeToColor.set('grass', 'green');
+mapTypeToColor.set('normal', 'black');
+mapTypeToColor.set('fight', 'maroon');
+mapTypeToColor.set('dark', 'black');
+mapTypeToColor.set('ghost', 'violet');
+mapTypeToColor.set('bug', 'green');
+mapTypeToColor.set('rock', 'black');
+mapTypeToColor.set('flying', 'rgb(97, 100, 121)');
+mapTypeToColor.set('ground', 'maroon');
+mapTypeToColor.set('electric', 'rgb(255, 202, 42)');
+mapTypeToColor.set('psychic', 'pink');
+mapTypeToColor.set('dragon', 'blue');
+mapTypeToColor.set('steel', 'gray');
+mapTypeToColor.set('fairy', 'pink');
+mapTypeToColor.set('ice', 'lightblue');
+
+export default mapTypeToColor;
