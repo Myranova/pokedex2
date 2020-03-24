@@ -8,21 +8,23 @@ import {
     TouchableHighlight,
     TextInput,
 } from 'react-native';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { StackNavigationProp} from '@react-navigation/stack';
 import * as PokemonModule from "../../interfaces/Pokemon";
 import mapTypeToColor from "../../utils/MapTypeToColor";
 
 interface AppState {
     gotAll: boolean,
+    gotAllEvolutionFamilyList: boolean
     errorFetch: boolean,
     searchValue: string,
-    listSprites : any[]
+    listSprites : any[],
+    evolutionFamilyList : any[];
     Fulldata : PokemonModule.default.PokemonInfo[]
     data : PokemonModule.default.PokemonInfo[]
 }
 
 interface Props {
-    navigation : NavigationStackProp
+    navigation : StackNavigationProp<any>
 }
 
 export class PokemonList extends React.Component<Props, AppState>
@@ -31,8 +33,10 @@ export class PokemonList extends React.Component<Props, AppState>
         super(props);
         this.state = {
             gotAll: false,
+            gotAllEvolutionFamilyList : false,
             errorFetch: false,
             searchValue: "",
+            evolutionFamilyList : [],
             listSprites: [],
             data: [],
             Fulldata: [],
@@ -40,7 +44,9 @@ export class PokemonList extends React.Component<Props, AppState>
     }
 
     componentDidMount() {
+        this.getAllEvolutionFamily();
         this.getAllPokemonsUri();
+        
     }
 
     renderSearchBar = () => {
@@ -65,13 +71,35 @@ export class PokemonList extends React.Component<Props, AppState>
         });
     }
 
+    getAllEvolutionFamily = async () => {
+        let fetchedData = [];
+        var error_fetch;
+        for (let i = 1 ; i < 151 && error_fetch != true; i++) {
+            await fetch(`https://pokeapi.co/api/v2/evolution-chain/${i}`)
+                .then(response => response.json())
+                .then((responseJson) => {
+                    fetchedData.push(responseJson);
+                    // console.log(responseJson);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    error_fetch = true;
+                })
+        }
+        this.setState({
+            evolutionFamilyList : fetchedData,
+            gotAllEvolutionFamilyList : true
+        })
+    }
+
     getAllPokemonsUri = async () => {
-        var fetchedData = [];
-        for(let i = 0; i < 150; i++) {
+        let fetchedData = [];
+        for(let i = 0; i < 15; i++) {
             await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
                 .then(response => response.json())
                 .then((responseJson) => {
                     fetchedData.push(responseJson);
+                    // console.log(responseJson);
                 })
                 .catch((error) => {
                     this.setState({
@@ -85,13 +113,13 @@ export class PokemonList extends React.Component<Props, AppState>
             data: fetchedData,
             errorFetch: false
         })
-
     }
 
     renderRowPokemon = (data : any) =>
         <TouchableHighlight key={data.item.id}
             onPress={() => this.props.navigation.navigate('PokemonDetailed', {
-                data : data.item
+                infos : data.item,
+                evolutionsFamily : this.state.evolutionFamilyList
             })}
         >
             <View style={{flex : 1, flexDirection: 'row'}}>
@@ -128,7 +156,11 @@ export class PokemonList extends React.Component<Props, AppState>
         </TouchableHighlight>
 
     render() {
-        const { gotAll, data } = this.state;
+        const { gotAll, data, evolutionFamilyList, gotAllEvolutionFamilyList } = this.state;
+        if (gotAllEvolutionFamilyList) {
+            evolutionFamilyList.forEach((evolutionFamily) => {
+            })
+        }
         if (!gotAll) {
             return (<View>
                 <ActivityIndicator/>

@@ -1,16 +1,23 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+// import { createStackNavigator } from 'react-navigation-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { PokemonList } from './src/components/PokemonList/Component';
 import PokemonDetailed from './src/components/PokemonDetailed/Component';
 
-const AppNavigator =  createStackNavigator({
-  PokemonList : PokemonList,
-  PokemonDetailed : PokemonDetailed
-}, {
-  initialRouteName : 'PokemonList'
-})
+const Stack = createStackNavigator();
+
+const myAppNavigator = () => (
+  <NavigationContainer>
+    <Stack.Navigator initialRouteName="PokemonList">
+      <Stack.Screen name="PokemonList" component={PokemonList}/>
+      <Stack.Screen name="PokemonDetailed" component={PokemonDetailed}/>
+    </Stack.Navigator>
+  </NavigationContainer>
+) 
+
 
 const styles = StyleSheet.create({
   container: {
@@ -21,4 +28,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default createAppContainer(AppNavigator);
+export default myAppNavigator;
